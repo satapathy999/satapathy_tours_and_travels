@@ -458,11 +458,11 @@ export function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
             <div className="relative rounded-2xl overflow-hidden border border-[#E5EAF0] bg-[#F5F7FA] shadow-md group">
-              <div className="aspect-4/3 sm:aspect-16/10 overflow-hidden">
+              <div className="aspect-3/4 sm:aspect-3/4 lg:aspect-3/4 overflow-hidden">
                 <ResilientImage
                   src={BRAND_CONFIG.founder.officeImage}
                   alt={`${BRAND_CONFIG.founder.name} – ${BRAND_CONFIG.founder.title} of ${BRAND_CONFIG.name}`}
-                  className="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-[1.02]"
+                  className="w-full h-full object-cover object-center transition-transform duration-300 group-hover:scale-[1.02]"
                 />
               </div>
               <div className="absolute bottom-3 left-3 right-3 p-3 rounded-xl bg-white/95 backdrop-blur-xs border border-white/40 shadow-sm flex items-center justify-between">

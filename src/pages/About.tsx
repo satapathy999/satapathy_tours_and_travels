@@ -115,12 +115,12 @@ export function About() {
             <div className="lg:col-span-5 space-y-4">
               {/* Primary Office Photo */}
               <div className="relative rounded-3xl overflow-hidden shadow-xl border-2 border-white ring-1 ring-black/5 bg-[#071D3A] group">
-                <div className="aspect-4/5 sm:aspect-1/1 lg:aspect-4/5 overflow-hidden">
+                <div className="aspect-3/4 sm:aspect-3/4 lg:aspect-3/4 overflow-hidden">
                   <ResilientImage
                     src={BRAND_CONFIG.founder.officeImage}
                     alt={`${BRAND_CONFIG.founder.name} – ${BRAND_CONFIG.founder.title} of ${BRAND_CONFIG.name}`}
                     lazy={false}
-                    className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.02]"
+                    className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.02]"
                   />
                 </div>
                 {/* Overlay gradient & identification badge */}
