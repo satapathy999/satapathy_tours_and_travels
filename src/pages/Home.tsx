@@ -457,12 +457,23 @@ export function Home() {
       <section className="py-16 sm:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
-            <div className="aspect-16/10 rounded-2xl overflow-hidden border border-[#E5EAF0] bg-[#F5F7FA]">
-              <ResilientImage
-                src={BRAND_CONFIG.aboutImage}
-                alt="Touring car driving along a scenic coastal road"
-                className="w-full h-full object-cover"
-              />
+            <div className="relative rounded-2xl overflow-hidden border border-[#E5EAF0] bg-[#F5F7FA] shadow-md group">
+              <div className="aspect-4/3 sm:aspect-16/10 overflow-hidden">
+                <ResilientImage
+                  src={BRAND_CONFIG.founder.officeImage}
+                  alt={`${BRAND_CONFIG.founder.name} – ${BRAND_CONFIG.founder.title} of ${BRAND_CONFIG.name}`}
+                  className="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-[1.02]"
+                />
+              </div>
+              <div className="absolute bottom-3 left-3 right-3 p-3 rounded-xl bg-white/95 backdrop-blur-xs border border-white/40 shadow-sm flex items-center justify-between">
+                <div>
+                  <h4 className="text-sm font-bold text-[#071D3A]">{BRAND_CONFIG.founder.name}</h4>
+                  <p className="text-xs text-[#F36B16] font-semibold">{BRAND_CONFIG.founder.title}</p>
+                </div>
+                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-1 rounded bg-[#071D3A] text-white">
+                  Satapathy Tour and Travels
+                </span>
+              </div>
             </div>
 
             <div>
@@ -474,12 +485,23 @@ export function Home() {
               <p className="mt-4 text-base text-[#697586] leading-relaxed">
                 Whether you need a car for 12 hours, 24 hours, a weekend, a week, or a full month, you can browse our available vehicles, review displayed rates, and negotiate your final rental price directly on WhatsApp or phone. Self-drive bike rentals are also in preparation and launching soon.
               </p>
+
+              {/* Founder punch line quote */}
+              <div className="mt-5 p-4 rounded-xl bg-[#FFF3E9] border-l-4 border-[#F36B16]">
+                <p className="text-sm font-bold text-[#071D3A]">
+                  &ldquo;{BRAND_CONFIG.founder.punchline}&rdquo;
+                </p>
+                <span className="block mt-1 text-xs font-semibold text-[#F36B16]">
+                  &mdash; {BRAND_CONFIG.founder.name}, {BRAND_CONFIG.founder.title}
+                </span>
+              </div>
+
               <div className="mt-7">
                 <Link
                   to="/about"
                   className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#071D3A] hover:bg-[#0B2345] text-white font-semibold text-sm transition-colors"
                 >
-                  <span>Know More</span>
+                  <span>Know More About Us</span>
                   <ArrowRight className="w-4 h-4" aria-hidden="true" />
                 </Link>
               </div>

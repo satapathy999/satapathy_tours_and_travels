@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Bike, Car, CheckCircle2, Clock, MessageCircle } from 'lucide-react';
+import { ArrowRight, Bike, Car, CheckCircle2, Clock, MessageCircle, Quote, Sparkles, ShieldCheck } from 'lucide-react';
 import { BRAND_CONFIG } from '../data/vehicles';
 import { usePageMeta } from '../utils/seo';
 import { useBooking } from '../context/BookingContext';
@@ -101,7 +101,140 @@ export function About() {
         </div>
       </section>
 
-      {/* SECTION 3 — OUR SERVICES */}
+      {/* SECTION 3 — FOUNDER & CEO LEADERSHIP */}
+      <section className="py-16 sm:py-24 bg-gradient-to-b from-white via-[#FFF9F5] to-white border-t border-[#E5EAF0]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionHeading
+            eyebrow="Leadership & Vision"
+            title="Meet Our Founder & CEO"
+            description="The entrepreneurial visionary driving self-drive convenience, transparency, and adventure across Rourkela and Odisha."
+          />
+
+          <div className="mt-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+            {/* LEFT COLUMN: FOUNDER PHOTOS SHOWCASE */}
+            <div className="lg:col-span-5 space-y-4">
+              {/* Primary Office Photo */}
+              <div className="relative rounded-3xl overflow-hidden shadow-xl border-2 border-white ring-1 ring-black/5 bg-[#071D3A] group">
+                <div className="aspect-4/5 sm:aspect-1/1 lg:aspect-4/5 overflow-hidden">
+                  <ResilientImage
+                    src={BRAND_CONFIG.founder.officeImage}
+                    alt={`${BRAND_CONFIG.founder.name} – ${BRAND_CONFIG.founder.title} of ${BRAND_CONFIG.name}`}
+                    lazy={false}
+                    className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.02]"
+                  />
+                </div>
+                {/* Overlay gradient & identification badge */}
+                <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-[#071D3A]/95 via-[#071D3A]/70 to-transparent text-white">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F36B16] text-white text-[11px] font-bold uppercase tracking-wider mb-2 shadow-sm">
+                    <Sparkles className="w-3 h-3" />
+                    <span>{BRAND_CONFIG.founder.title}</span>
+                  </div>
+                  <h3 className="text-2xl font-extrabold text-white tracking-tight">
+                    {BRAND_CONFIG.founder.name}
+                  </h3>
+                  <p className="text-xs text-slate-300 font-medium mt-0.5">
+                    {BRAND_CONFIG.name} · Rourkela, Odisha
+                  </p>
+                </div>
+              </div>
+
+              {/* Secondary Lifestyle / Adventure Photo */}
+              <div className="relative rounded-2xl overflow-hidden border border-[#E5EAF0] bg-white shadow-xs p-3 flex items-center gap-4">
+                <div className="w-20 h-20 rounded-xl overflow-hidden bg-slate-900 shrink-0">
+                  <ResilientImage
+                    src={BRAND_CONFIG.founder.tharImage}
+                    alt={`${BRAND_CONFIG.founder.name} with Thar Roxx`}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <span className="block text-xs font-bold uppercase tracking-wider text-[#F36B16]">
+                    On The Road
+                  </span>
+                  <p className="text-sm font-semibold text-[#071D3A] line-clamp-1">
+                    Passionate Adventurer & Car Enthusiast
+                  </p>
+                  <p className="text-xs text-[#697586] mt-0.5">
+                    Inspiring memorable road trips across Odisha
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* RIGHT COLUMN: PUNCH LINE & FOUNDER VISION */}
+            <div className="lg:col-span-7 space-y-6">
+              {/* THE PUNCH LINE CALLOUT BANNER */}
+              <div className="relative p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-[#071D3A] to-[#0B2345] text-white shadow-xl overflow-hidden">
+                <div
+                  className="absolute -right-8 -bottom-8 w-44 h-44 rounded-full bg-[#F36B16]/20 blur-2xl pointer-events-none"
+                  aria-hidden="true"
+                />
+                <Quote className="w-10 h-10 text-[#F36B16] mb-3 opacity-90" aria-hidden="true" />
+                
+                <p className="text-xs font-bold uppercase tracking-widest text-[#F36B16]">
+                  Official Punchline
+                </p>
+                <blockquote className="mt-2 text-2xl sm:text-3xl font-extrabold text-white leading-snug tracking-tight">
+                  &ldquo;{BRAND_CONFIG.founder.punchline}&rdquo;
+                </blockquote>
+                <p className="mt-2 text-sm sm:text-base font-semibold text-amber-200/90 italic">
+                  &mdash; {BRAND_CONFIG.founder.punchlineHindi}
+                </p>
+
+                <div className="mt-6 pt-5 border-t border-white/10 flex items-center justify-between gap-4">
+                  <div>
+                    <span className="block text-base font-bold text-white">
+                      {BRAND_CONFIG.founder.name}
+                    </span>
+                    <span className="block text-xs text-slate-300">
+                      {BRAND_CONFIG.founder.title}, {BRAND_CONFIG.name}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 border border-white/15 text-xs text-slate-200 font-medium">
+                    <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                    <span>Verified Founder</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* FOUNDER'S STORY & MESSAGE */}
+              <div className="p-6 sm:p-8 rounded-3xl bg-white border border-[#E5EAF0] shadow-xs space-y-4">
+                <h4 className="text-xl font-bold text-[#071D3A]">
+                  A Message from Ayush Satapathy
+                </h4>
+                <p className="text-sm sm:text-base text-[#697586] leading-relaxed">
+                  &ldquo;When I founded Satapathy Tour and Travels in Rourkela, I wanted to change the way people rent and drive cars. Self-drive shouldn&rsquo;t be complicated by confusing agreements, hidden charges, or poor service. We built this business on one fundamental principle: total customer freedom.&rdquo;
+                </p>
+                <p className="text-sm sm:text-base text-[#697586] leading-relaxed">
+                  &ldquo;Whether you need an SUV like the Scorpio for a rugged road trip, a sleek sedan like the Amaze or Dzire for family comfort, or an effortless Baleno Automatic for daily city drives, we give you the keys with complete peace of mind. Every client is a part of our extended family.&rdquo;
+                </p>
+
+                <div className="pt-4 flex flex-wrap items-center gap-3">
+                  <a
+                    href={BRAND_CONFIG.whatsappBaseUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-white font-semibold text-sm transition-colors shadow-xs"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    <span>Chat with Ayush on WhatsApp</span>
+                  </a>
+                  <button
+                    type="button"
+                    onClick={() => openBooking()}
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#F36B16] hover:bg-[#d95b0e] text-white font-semibold text-sm transition-colors shadow-xs cursor-pointer"
+                  >
+                    <span>Book Your Ride</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 4 — OUR SERVICES */}
       <section className="py-16 sm:py-20 bg-[#F5F7FA] border-y border-[#E5EAF0]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading

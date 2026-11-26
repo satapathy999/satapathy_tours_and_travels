@@ -39,6 +39,15 @@ export const BRAND_CONFIG = {
   heroImage: '/src/assets/images/hero_automotive_rental_1795091053905.jpg',
   bikeHeroImage: '/src/assets/images/bike_coming_soon_1795091053999.jpg',
   aboutImage: '/src/assets/images/about_automotive_drive_1795091054333.jpg',
+  founder: {
+    name: 'Ayush Satapathy',
+    title: 'Founder & CEO',
+    punchline: 'Drive Your Own Journey — We Deliver the Keys to Your Freedom.',
+    punchlineHindi: 'Apna Safar, Apni Manzil — Freedom in Every Mile',
+    bio: 'Passionate about seamless road trips and customer trust, Ayush Satapathy established Satapathy Tour and Travels to bring modern, transparent, and flexible self-drive car rental options to travellers across Rourkela and Odisha.',
+    officeImage: '/src/assets/images/founder_ayush_satapathy_office.jpg',
+    tharImage: '/src/assets/images/founder_ayush_satapathy_thar.jpg',
+  },
   negotiableNotice: 'All prices are negotiable. Contact us for the best available rental price.',
   bikeComingSoonMessage:
     'Hello Satapathy Tour and Travels, I am interested in your upcoming self-drive bike rental service. Please let me know when it becomes available.',
