@@ -122,7 +122,7 @@ export function About() {
                 </div>
                 <h3 className="text-2xl font-bold text-[#071D3A]">Self-Drive Cars</h3>
                 <p className="mt-3 text-sm sm:text-base text-[#697586] leading-relaxed">
-                  Choose from Swift Dzire, Baleno, Fronx, and Swift with 12-hour and 24-hour package options and negotiable rates.
+                  Choose from Scorpio, Baleno Automatic, Honda Amaze, Swift Dzire, Baleno, Fronx, and Swift with 12-hour and 24-hour package options and negotiable rates.
                 </p>
               </div>
               <div className="mt-6">

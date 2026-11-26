@@ -1,5 +1,5 @@
 import React from 'react';
-import { Instagram, Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
+import { ExternalLink, Instagram, Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
 import { BRAND_CONFIG } from '../data/vehicles';
 import { usePageMeta } from '../utils/seo';
 import { ContactForm } from '../components/ContactForm';
@@ -153,6 +153,31 @@ export function Contact() {
                   <p className="mt-2.5 text-sm text-slate-300 leading-relaxed">
                     {BRAND_CONFIG.locationDescription}
                   </p>
+                </div>
+
+                {/* Google Map Embedded Iframe */}
+                <div className="mt-4 w-full h-52 rounded-xl overflow-hidden border border-[#E5EAF0] shadow-xs bg-[#071D3A]">
+                  <iframe
+                    src={BRAND_CONFIG.googleMapsEmbedUrl}
+                    title="Satapathy Tours and Travels Google Map Location"
+                    className="w-full h-full border-0"
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    allowFullScreen
+                  />
+                </div>
+
+                <div className="mt-3">
+                  <a
+                    href={BRAND_CONFIG.googleMapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-1.5 w-full py-2.5 px-4 rounded-xl bg-[#071D3A] hover:bg-[#0B2345] text-white text-xs font-semibold transition-colors shadow-xs"
+                  >
+                    <MapPin className="w-3.5 h-3.5 text-[#F36B16]" />
+                    <span>Open in Google Maps</span>
+                    <ExternalLink className="w-3 h-3 text-slate-300" />
+                  </a>
                 </div>
 
                 <div className="mt-6 pt-5 border-t border-[#E5EAF0] flex flex-wrap items-center justify-between gap-3">

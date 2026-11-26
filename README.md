@@ -15,6 +15,9 @@ Self-drive car and upcoming bike rental web application for **Satapathy Tour and
 | --- | --- | --- |
 | Swift Dzire | ₹1,500 | ₹2,000 |
 | Baleno | ₹1,300 | ₹1,800 |
+| Baleno Automatic | ₹2,500 | ₹3,200 |
+| Scorpio | ₹2,500 | ₹3,200 |
+| Honda Amaze | ₹2,500 | ₹3,200 |
 | Fronx | ₹1,600 | ₹2,300 |
 | Swift | ₹1,200 | ₹1,800 |
 

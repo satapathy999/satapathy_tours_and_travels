@@ -23,7 +23,7 @@ export interface BookingWhatsAppPayload {
 export function buildBookingWhatsAppMessage(payload: BookingWhatsAppPayload): string {
   const safeName = sanitizeInput(payload.customerName, 80);
   const safePhone = formatIndianMobileDisplay(payload.customerPhone);
-  const safeModel = sanitizeInput(payload.vehicleModel, 100);
+  const safeModel = sanitizeInput(payload.vehicleModel, 250);
   const safeDuration = sanitizeInput(payload.rentalDuration, 80);
   const safeDescription = payload.description ? sanitizeInput(payload.description, 350) : '';
 

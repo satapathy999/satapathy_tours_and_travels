@@ -11,7 +11,7 @@ export function Cars() {
   usePageMeta({
     title: 'Self-Drive Cars – Satapathy Tour and Travels',
     description:
-      'Explore Swift Dzire, Baleno, Fronx, and Swift self-drive car rental packages. All prices are negotiable with direct WhatsApp booking.',
+      'Explore Scorpio, Baleno Automatic, Honda Amaze, Swift Dzire, Baleno, Fronx, and Swift self-drive car rental packages. All prices are negotiable with direct WhatsApp booking.',
   });
 
   const [detailCar, setDetailCar] = useState<CarModel | null>(null);

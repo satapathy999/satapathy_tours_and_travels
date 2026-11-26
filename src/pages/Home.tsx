@@ -33,7 +33,7 @@ export function Home() {
   usePageMeta({
     title: 'Satapathy Tour and Travels – Self-Drive Car & Bike Rentals in Rourkela',
     description:
-      'Explore more with convenient self-drive car rentals all over Rourkela from Satapathy Tour and Travels. Transparent negotiable packages for Swift Dzire, Baleno, Fronx, and Swift.',
+      'Explore more with convenient self-drive car rentals all over Rourkela from Satapathy Tour and Travels. Transparent negotiable packages for Scorpio, Baleno Automatic, Honda Amaze, Swift Dzire, Baleno, Fronx, and Swift.',
   });
 
   const { openBooking, triggerCarAnimation } = useBooking();
@@ -404,7 +404,7 @@ export function Home() {
                 step: '01',
                 icon: FileText,
                 title: 'Fill Up the Form',
-                desc: 'Select your preferred car (Swift Dzire, Baleno, Fronx, Swift), choose your rental duration (12h, 24h, weekly), and enter your travel dates.',
+                desc: 'Select your preferred cars (Scorpio, Baleno, Amaze, Dzire, Fronx, Swift), choose your rental duration (12h, 24h, weekly), and enter your travel dates.',
               },
               {
                 step: '02',

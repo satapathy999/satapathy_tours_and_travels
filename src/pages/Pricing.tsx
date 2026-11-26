@@ -11,7 +11,7 @@ export function Pricing() {
   usePageMeta({
     title: 'Rental Pricing – Satapathy Tour and Travels',
     description:
-      'View 12-hour and 24-hour self-drive car rental packages for Swift Dzire, Baleno, Fronx, and Swift. All prices are negotiable.',
+      'View 12-hour and 24-hour self-drive car rental packages for Scorpio, Baleno Automatic, Honda Amaze, Swift Dzire, Baleno, Fronx, and Swift. All prices are negotiable.',
   });
 
   const { openBooking } = useBooking();

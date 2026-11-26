@@ -265,3 +265,176 @@ export function computePriceEstimate(params: {
     whatsappPriceValue: `${formatted} (${duration} package, negotiable)`,
   };
 }
+
+export interface CarSelectionItem {
+  car: CarModel;
+  quantity: number;
+}
+
+export interface MultiCarPriceEstimateResult {
+  displayPrice: string;
+  totalAmount: number | null;
+  breakdown: Array<{
+    carId: string;
+    carName: string;
+    quantity: number;
+    unitPrice: number;
+    total: number;
+  }>;
+  isExactPackage: boolean;
+  exceedsPackage: boolean;
+  helperText: string;
+  whatsappPriceValue: string;
+  totalCarsCount: number;
+}
+
+/**
+ * Calculates combined price estimate for multiple selected cars.
+ */
+export function computeMultiCarPriceEstimate(params: {
+  vehicleType: VehicleType;
+  selectedCars: CarSelectionItem[];
+  hasOtherModel?: boolean;
+  duration: RentalDuration;
+  rentalHours: number | null;
+}): MultiCarPriceEstimateResult {
+  const { vehicleType, selectedCars, hasOtherModel = false, duration, rentalHours } = params;
+
+  if (vehicleType === 'Bike') {
+    return {
+      displayPrice: 'Coming Soon',
+      totalAmount: null,
+      breakdown: [],
+      isExactPackage: false,
+      exceedsPackage: false,
+      helperText: 'Bike rental pricing will be announced soon.',
+      whatsappPriceValue: 'Final Price on Enquiry (Bike rental coming soon)',
+      totalCarsCount: 0,
+    };
+  }
+
+  if (vehicleType === 'Others') {
+    return {
+      displayPrice: 'Final price on enquiry',
+      totalAmount: null,
+      breakdown: [],
+      isExactPackage: false,
+      exceedsPackage: false,
+      helperText:
+        'Custom vehicle requests are quoted directly. Prices are negotiable — our team will confirm availability and final price on WhatsApp.',
+      whatsappPriceValue: 'Final Price on Enquiry',
+      totalCarsCount: 0,
+    };
+  }
+
+  const validSelections = selectedCars.filter((item) => item.quantity > 0);
+  const totalCarsCount = validSelections.reduce((sum, item) => sum + item.quantity, 0);
+
+  if (totalCarsCount === 0) {
+    if (hasOtherModel) {
+      return {
+        displayPrice: 'Final price on enquiry',
+        totalAmount: null,
+        breakdown: [],
+        isExactPackage: false,
+        exceedsPackage: false,
+        helperText: 'Custom vehicle requests are quoted directly on WhatsApp.',
+        whatsappPriceValue: 'Final Price on Enquiry',
+        totalCarsCount: 1,
+      };
+    }
+    return {
+      displayPrice: 'Select at least 1 car',
+      totalAmount: null,
+      breakdown: [],
+      isExactPackage: false,
+      exceedsPackage: false,
+      helperText: 'Choose one or more car models to view the combined package rate.',
+      whatsappPriceValue: 'Final Price on Enquiry',
+      totalCarsCount: 0,
+    };
+  }
+
+  if (duration !== '12 Hours' && duration !== '24 Hours') {
+    return {
+      displayPrice: 'Final price on enquiry',
+      totalAmount: null,
+      breakdown: [],
+      isExactPackage: false,
+      exceedsPackage: false,
+      helperText: `Negotiable ${duration} rental package for ${totalCarsCount} car${
+        totalCarsCount > 1 ? 's' : ''
+      }. Send your request on WhatsApp for the best multi-vehicle quote.`,
+      whatsappPriceValue: `Final Price on Enquiry (${duration} package for ${totalCarsCount} car${
+        totalCarsCount > 1 ? 's' : ''
+      })`,
+      totalCarsCount,
+    };
+  }
+
+  const packageHours = duration === '12 Hours' ? 12 : 24;
+
+  if (rentalHours !== null && rentalHours > packageHours) {
+    const roundedHours = Math.ceil(rentalHours);
+    return {
+      displayPrice: 'Final price on enquiry',
+      totalAmount: null,
+      breakdown: [],
+      isExactPackage: false,
+      exceedsPackage: true,
+      helperText: `Selected schedule (~${roundedHours} hrs) exceeds the ${duration} package. Prices are negotiable — our team will confirm the final amount on enquiry.`,
+      whatsappPriceValue: 'Final Price on Enquiry',
+      totalCarsCount,
+    };
+  }
+
+  let totalAmount = 0;
+  const breakdown: MultiCarPriceEstimateResult['breakdown'] = [];
+
+  for (const item of validSelections) {
+    const unitPrice = duration === '12 Hours' ? item.car.price12h : item.car.price24h;
+    const subtotal = unitPrice * item.quantity;
+    totalAmount += subtotal;
+    breakdown.push({
+      carId: item.car.id,
+      carName: item.car.name,
+      quantity: item.quantity,
+      unitPrice,
+      total: subtotal,
+    });
+  }
+
+  const formattedTotal = formatINR(totalAmount);
+
+  if (hasOtherModel) {
+    return {
+      displayPrice: `${formattedTotal} + Custom`,
+      totalAmount,
+      breakdown,
+      isExactPackage: true,
+      exceedsPackage: false,
+      helperText: `Package rate for ${totalCarsCount} selected car${
+        totalCarsCount > 1 ? 's' : ''
+      } plus custom car request. Prices are negotiable on WhatsApp.`,
+      whatsappPriceValue: `${formattedTotal} + Custom Car (${duration} package for ${totalCarsCount} car${
+        totalCarsCount > 1 ? 's' : ''
+      }, negotiable)`,
+      totalCarsCount: totalCarsCount + 1,
+    };
+  }
+
+  return {
+    displayPrice: formattedTotal,
+    totalAmount,
+    breakdown,
+    isExactPackage: true,
+    exceedsPackage: false,
+    helperText: `Combined ${duration} package rate for ${totalCarsCount} car${
+      totalCarsCount > 1 ? 's' : ''
+    }. Prices are negotiable — final amount will be confirmed by our team.`,
+    whatsappPriceValue: `${formattedTotal} (${duration} package for ${totalCarsCount} car${
+      totalCarsCount > 1 ? 's' : ''
+    }, negotiable)`,
+    totalCarsCount,
+  };
+}

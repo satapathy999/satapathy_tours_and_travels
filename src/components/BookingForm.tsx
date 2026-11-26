@@ -1,5 +1,18 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Bike, Calendar, Car, Clock, Info, Layers, Mail, MessageCircle } from 'lucide-react';
+import {
+  Bike,
+  Calendar,
+  Car,
+  Check,
+  CheckCircle2,
+  Clock,
+  Info,
+  Layers,
+  Mail,
+  MessageCircle,
+  Minus,
+  Plus,
+} from 'lucide-react';
 import {
   BRAND_CONFIG,
   CAR_MODELS,
@@ -13,7 +26,8 @@ import { type BookingPrefill } from '../context/BookingContext';
 import {
   addDaysToDateString,
   calculateRentalHours,
-  computePriceEstimate,
+  computeMultiCarPriceEstimate,
+  type CarSelectionItem,
   formatDisplayTime,
   formatIndianDate,
   formatIndianMobileDisplay,
@@ -56,13 +70,25 @@ export function BookingForm({
   const [fullName, setFullName] = useState('');
   const [mobile, setMobile] = useState('');
   const [vehicleType, setVehicleType] = useState<VehicleType>(prefill?.vehicleType || 'Car');
-  const [selectedCarId, setSelectedCarId] = useState<string>(
-    prefill?.vehicleId === OTHER_MODEL_ID
-      ? OTHER_MODEL_ID
-      : prefill?.vehicleId && getCarById(prefill.vehicleId)
-        ? getCarById(prefill.vehicleId)!.id
-        : CAR_MODELS[0].id
-  );
+
+  // Support multiple cars: map of carId -> quantity (e.g. { 'swift-dzire': 1, 'baleno': 1 })
+  const [selectedCars, setSelectedCars] = useState<Record<string, number>>(() => {
+    if (prefill?.vehicleId) {
+      if (prefill.vehicleId === OTHER_MODEL_ID) {
+        return {};
+      }
+      const found = getCarById(prefill.vehicleId);
+      if (found) {
+        return { [found.id]: 1 };
+      }
+    }
+    return { [CAR_MODELS[0].id]: 1 };
+  });
+
+  const [includeOtherCar, setIncludeOtherCar] = useState<boolean>(() => {
+    return prefill?.vehicleId === OTHER_MODEL_ID;
+  });
+
   const [customVehicleText, setCustomVehicleText] = useState('');
   const [duration, setDuration] = useState<RentalDuration>(prefill?.duration || '12 Hours');
   const [customDurationText, setCustomDurationText] = useState('');
@@ -90,10 +116,14 @@ export function BookingForm({
     }
     if (prefill?.vehicleId) {
       if (prefill.vehicleId === OTHER_MODEL_ID) {
-        setSelectedCarId(OTHER_MODEL_ID);
+        setIncludeOtherCar(true);
+        setSelectedCars({});
       } else {
         const found = getCarById(prefill.vehicleId);
-        if (found) setSelectedCarId(found.id);
+        if (found) {
+          setSelectedCars({ [found.id]: 1 });
+          setIncludeOtherCar(false);
+        }
       }
     }
     if (prefill?.duration) {
@@ -132,36 +162,94 @@ export function BookingForm({
     }
   };
 
-  const isOtherCarModel = vehicleType === 'Car' && selectedCarId === OTHER_MODEL_ID;
-  const selectedCar = useMemo(
-    () => (isOtherCarModel ? undefined : getCarById(selectedCarId)),
-    [selectedCarId, isOtherCarModel]
-  );
+  const toggleCar = (carId: string) => {
+    setSelectedCars((prev) => {
+      const copy = { ...prev };
+      if (copy[carId]) {
+        delete copy[carId];
+      } else {
+        copy[carId] = 1;
+      }
+      return copy;
+    });
+    setSubmittedErrors((prev) => {
+      if (!prev.car) return prev;
+      const copy = { ...prev };
+      delete copy.car;
+      return copy;
+    });
+  };
+
+  const updateCarQty = (carId: string, delta: number, e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    setSelectedCars((prev) => {
+      const current = prev[carId] || 0;
+      const next = current + delta;
+      const copy = { ...prev };
+      if (next <= 0) {
+        delete copy[carId];
+      } else {
+        copy[carId] = Math.min(next, 10);
+      }
+      return copy;
+    });
+    setSubmittedErrors((prev) => {
+      if (!prev.car) return prev;
+      const copy = { ...prev };
+      delete copy.car;
+      return copy;
+    });
+  };
+
+  const selectedCarItems = useMemo<CarSelectionItem[]>(() => {
+    const items: CarSelectionItem[] = [];
+    for (const [id, qty] of Object.entries(selectedCars)) {
+      if (qty > 0) {
+        const car = getCarById(id);
+        if (car) {
+          items.push({ car, quantity: qty });
+        }
+      }
+    }
+    return items;
+  }, [selectedCars]);
+
+  const totalCarCount = useMemo(() => {
+    return (
+      selectedCarItems.reduce((sum, item) => sum + item.quantity, 0) +
+      (includeOtherCar ? 1 : 0)
+    );
+  }, [selectedCarItems, includeOtherCar]);
 
   const rentalHours = useMemo(
     () => calculateRentalHours(pickupDate, pickupTime, returnDate, returnTime),
     [pickupDate, pickupTime, returnDate, returnTime]
   );
 
-  const priceEstimate = useMemo(
-    () =>
-      computePriceEstimate({
-        vehicleType,
-        car: selectedCar,
-        isOtherModel: isOtherCarModel,
-        duration,
-        rentalHours,
-      }),
-    [vehicleType, selectedCar, isOtherCarModel, duration, rentalHours]
-  );
+  const priceEstimate = useMemo(() => {
+    return computeMultiCarPriceEstimate({
+      vehicleType,
+      selectedCars: selectedCarItems,
+      hasOtherModel: includeOtherCar,
+      duration,
+      rentalHours,
+    });
+  }, [vehicleType, selectedCarItems, includeOtherCar, duration, rentalHours]);
 
   const resolvedVehicleModelLabel = useMemo(() => {
     const cleanCustom = sanitizeInput(customVehicleText, 100);
     if (vehicleType === 'Car') {
-      if (isOtherCarModel) {
-        return cleanCustom ? `Others (${cleanCustom})` : 'Others (Custom Car Enquiry)';
+      const carNames: string[] = [];
+      for (const item of selectedCarItems) {
+        carNames.push(`${item.car.name}${item.quantity > 1 ? ` (×${item.quantity})` : ''}`);
       }
-      return selectedCar?.name || CAR_MODELS[0].name;
+      if (includeOtherCar) {
+        carNames.push(cleanCustom ? `Others (${cleanCustom})` : 'Others (Custom Car)');
+      }
+      if (carNames.length === 0) {
+        return 'No car selected';
+      }
+      return `${carNames.join(', ')} [${totalCarCount} Car${totalCarCount > 1 ? 's' : ''} Total]`;
     }
     if (vehicleType === 'Bike') {
       return cleanCustom
@@ -169,7 +257,7 @@ export function BookingForm({
         : 'Upcoming Self-Drive Bike Rental (General Enquiry)';
     }
     return cleanCustom ? `Others (${cleanCustom})` : 'Others (Custom Vehicle Enquiry)';
-  }, [vehicleType, isOtherCarModel, selectedCar, customVehicleText]);
+  }, [vehicleType, selectedCarItems, includeOtherCar, totalCarCount, customVehicleText]);
 
   const resolvedDurationLabel = useMemo(() => {
     const cleanCustomDur = sanitizeInput(customDurationText, 80);
@@ -186,6 +274,10 @@ export function BookingForm({
 
     const phoneError = validateIndianMobile(mobile);
     if (phoneError) nextErrors.mobile = phoneError;
+
+    if (vehicleType === 'Car' && selectedCarItems.length === 0 && !includeOtherCar) {
+      nextErrors.car = 'Please select at least one car model.';
+    }
 
     const scheduleErrors = validateSchedule(pickupDate, pickupTime, returnDate, returnTime);
     if (scheduleErrors.pickupError) nextErrors.pickup = scheduleErrors.pickupError;
@@ -379,81 +471,181 @@ export function BookingForm({
         </div>
       </section>
 
-      {/* Step 3: Vehicle Model */}
+      {/* Step 3: Vehicle Model Selection (Supports Multiple Cars!) */}
       <section aria-labelledby="booking-step-3">
-        <h3 id="booking-step-3" className="text-sm font-bold text-[#071D3A] uppercase tracking-wider mb-3">
-          3. Select Vehicle Model
-        </h3>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+          <div>
+            <h3 id="booking-step-3" className="text-sm font-bold text-[#071D3A] uppercase tracking-wider">
+              3. Select Vehicle Model{vehicleType === 'Car' ? 's' : ''}
+            </h3>
+            {vehicleType === 'Car' && (
+              <p className="text-xs text-[#697586] mt-0.5">
+                Select one or multiple cars. Perfect for family, wedding, or corporate trips.
+              </p>
+            )}
+          </div>
+
+          {vehicleType === 'Car' && totalCarCount > 0 && (
+            <span className="inline-flex items-center gap-1.5 self-start sm:self-center px-3 py-1 rounded-full bg-[#F36B16]/15 border border-[#F36B16]/30 text-xs font-bold text-[#F36B16]">
+              <CheckCircle2 className="w-3.5 h-3.5" />
+              <span>
+                {totalCarCount} {totalCarCount === 1 ? 'Car' : 'Cars'} Selected
+              </span>
+            </span>
+          )}
+        </div>
+
+        {submittedErrors.car && (
+          <p className="mb-3 text-xs font-medium text-red-600" role="alert">
+            {submittedErrors.car}
+          </p>
+        )}
 
         {vehicleType === 'Car' ? (
           <div className="space-y-3">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {CAR_MODELS.map((car) => {
-                const isSelected = selectedCarId === car.id;
+                const isSelected = Boolean(selectedCars[car.id] && selectedCars[car.id] > 0);
+                const quantity = selectedCars[car.id] || 0;
+                const unitRate = duration === '12 Hours' ? car.price12h : car.price24h;
+                const subtotal = unitRate * quantity;
+
                 return (
-                  <button
+                  <div
                     key={car.id}
-                    type="button"
-                    onClick={() => setSelectedCarId(car.id)}
-                    className={`flex items-center gap-3 p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
+                    onClick={() => toggleCar(car.id)}
+                    className={`relative flex flex-col justify-between p-3 rounded-xl border text-left transition-all cursor-pointer ${
                       isSelected
-                        ? 'border-[#F36B16] bg-[#FFF3E9]'
+                        ? 'border-[#F36B16] bg-[#FFF3E9] shadow-xs'
                         : 'border-[#E5EAF0] bg-white hover:bg-[#F5F7FA]'
                     }`}
                   >
-                    <div className="w-20 h-14 rounded-lg overflow-hidden bg-[#F5F7FA] shrink-0">
-                      <ResilientImage
-                        src={car.image}
-                        alt={car.name}
-                        lazy={false}
-                        className="w-full h-full object-cover"
-                      />
+                    <div className="flex items-start gap-3">
+                      {/* Checkbox badge on top of car image */}
+                      <div className="relative w-20 h-16 rounded-lg overflow-hidden bg-[#F5F7FA] shrink-0 border border-black/5">
+                        <ResilientImage
+                          src={car.image}
+                          alt={car.name}
+                          lazy={false}
+                          className="w-full h-full object-cover"
+                        />
+                        {isSelected && (
+                          <div className="absolute top-1 left-1 w-5 h-5 rounded-full bg-[#F36B16] text-white flex items-center justify-center shadow-md">
+                            <Check className="w-3 h-3 stroke-[3]" />
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center justify-between gap-1">
+                          <span className="block text-sm font-bold text-[#071D3A] truncate">
+                            {car.name}
+                          </span>
+                          {isSelected && (
+                            <span className="text-[10px] font-bold text-[#F36B16] bg-white px-2 py-0.5 rounded-md border border-[#F36B16]/20">
+                              Selected
+                            </span>
+                          )}
+                        </div>
+                        <span className="block text-xs text-[#697586] tabular-nums mt-0.5">
+                          12h: {formatINR(car.price12h)} · 24h: {formatINR(car.price24h)}
+                        </span>
+                        <p className="text-[11px] text-slate-500 line-clamp-1 mt-1">
+                          {car.shortNote}
+                        </p>
+                      </div>
                     </div>
-                    <div className="min-w-0 flex-1">
-                      <span className="block text-sm font-bold text-[#071D3A] truncate">
-                        {car.name}
-                      </span>
-                      <span className="block text-xs text-[#697586] tabular-nums mt-0.5">
-                        12h: {formatINR(car.price12h)} · 24h: {formatINR(car.price24h)}
-                      </span>
-                    </div>
-                  </button>
+
+                    {/* Interactive Quantity Controls when selected */}
+                    {isSelected && (
+                      <div
+                        onClick={(e) => e.stopPropagation()}
+                        className="mt-3 pt-2.5 border-t border-[#F36B16]/20 flex items-center justify-between gap-2"
+                      >
+                        <span className="text-xs font-semibold text-[#071D3A]">
+                          Qty:
+                        </span>
+
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center bg-white rounded-lg border border-[#E5EAF0] shadow-2xs overflow-hidden">
+                            <button
+                              type="button"
+                              onClick={(e) => updateCarQty(car.id, -1, e)}
+                              className="w-7 h-7 flex items-center justify-center hover:bg-[#F5F7FA] text-[#071D3A] transition-colors cursor-pointer"
+                              title="Decrease quantity"
+                            >
+                              <Minus className="w-3.5 h-3.5" />
+                            </button>
+                            <span className="w-8 text-center text-xs font-bold text-[#071D3A] tabular-nums">
+                              {quantity}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={(e) => updateCarQty(car.id, 1, e)}
+                              className="w-7 h-7 flex items-center justify-center hover:bg-[#F5F7FA] text-[#071D3A] transition-colors cursor-pointer"
+                              title="Increase quantity"
+                            >
+                              <Plus className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+
+                          {(duration === '12 Hours' || duration === '24 Hours') && (
+                            <span className="text-xs font-bold text-[#F36B16] tabular-nums">
+                              {formatINR(subtotal)}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 );
               })}
 
               {/* Others Option for Cars */}
-              <button
-                type="button"
-                onClick={() => setSelectedCarId(OTHER_MODEL_ID)}
+              <div
+                onClick={() => setIncludeOtherCar((prev) => !prev)}
                 className={`sm:col-span-2 flex items-center gap-3 p-3 rounded-xl border text-left transition-all cursor-pointer ${
-                  isOtherCarModel
+                  includeOtherCar
                     ? 'border-[#F36B16] bg-[#FFF3E9]'
                     : 'border-[#E5EAF0] bg-white hover:bg-[#F5F7FA]'
                 }`}
               >
-                <div className="w-10 h-10 rounded-lg bg-[#F5F7FA] text-[#071D3A] flex items-center justify-center shrink-0">
-                  <Layers className="w-5 h-5 text-[#F36B16]" aria-hidden="true" />
+                <div
+                  className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${
+                    includeOtherCar ? 'bg-[#F36B16] text-white' : 'bg-[#F5F7FA] text-[#071D3A]'
+                  }`}
+                >
+                  <Layers className="w-5 h-5" aria-hidden="true" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <span className="block text-sm font-bold text-[#071D3A]">Others</span>
+                  <div className="flex items-center justify-between">
+                    <span className="block text-sm font-bold text-[#071D3A]">
+                      Others / Custom Additional Vehicle
+                    </span>
+                    {includeOtherCar && (
+                      <span className="text-[10px] font-bold text-[#F36B16] bg-white px-2 py-0.5 rounded-md border border-[#F36B16]/20">
+                        Added
+                      </span>
+                    )}
+                  </div>
                   <span className="block text-xs text-[#697586]">
-                    Looking for another car or custom request? Select to specify.
+                    Need a 7-seater, Innova, luxury car, or special fleet? Check this to specify.
                   </span>
                 </div>
-              </button>
+              </div>
             </div>
 
-            {isOtherCarModel && (
+            {includeOtherCar && (
               <div>
                 <label htmlFor="booking-custom-car" className="block text-xs font-medium text-[#697586] mb-1">
-                  Specify Preferred Car / Requirement (Optional)
+                  Specify Preferred Car / Custom Vehicle Requirement
                 </label>
                 <input
                   id="booking-custom-car"
                   type="text"
                   value={customVehicleText}
                   onChange={(e) => setCustomVehicleText(e.target.value)}
-                  placeholder="Type your preferred vehicle or enquiry..."
+                  placeholder="e.g. Innova Crysta, Scorpio, or 2 additional hatchbacks..."
                   maxLength={100}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-[#E5EAF0] bg-white text-sm text-[#172337] focus:outline-none focus:border-[#F36B16]"
                 />
@@ -517,15 +709,10 @@ export function BookingForm({
             let pkgSubtext = 'On Enquiry';
             if (vehicleType === 'Bike') {
               pkgSubtext = 'Coming Soon';
-            } else if (
-              vehicleType === 'Car' &&
-              !isOtherCarModel &&
-              selectedCar &&
-              (pkg === '12 Hours' || pkg === '24 Hours')
-            ) {
-              pkgSubtext = formatINR(pkg === '12 Hours' ? selectedCar.price12h : selectedCar.price24h);
-            } else if (pkg === 'Others') {
-              pkgSubtext = 'Custom';
+            } else if (pkg === '12 Hours') {
+              pkgSubtext = 'Preset Rate';
+            } else if (pkg === '24 Hours') {
+              pkgSubtext = 'Preset Rate';
             }
 
             return (
@@ -535,14 +722,15 @@ export function BookingForm({
                 onClick={() => handleDurationChange(pkg)}
                 className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
                   active
-                    ? 'border-[#F36B16] bg-[#FFF3E9]'
-                    : 'border-[#E5EAF0] bg-white hover:bg-[#F5F7FA]'
+                    ? 'border-[#F36B16] bg-[#FFF3E9] text-[#071D3A]'
+                    : 'border-[#E5EAF0] bg-white text-[#172337] hover:bg-[#F5F7FA]'
                 }`}
               >
-                <span className="block text-sm font-bold text-[#071D3A]">{pkg}</span>
-                <span className="block text-xs font-semibold text-[#F36B16] tabular-nums mt-0.5">
-                  {pkgSubtext}
-                </span>
+                <div className="flex items-center justify-between">
+                  <span className="block text-sm font-bold">{pkg}</span>
+                  {active && <span className="w-2 h-2 rounded-full bg-[#F36B16]" />}
+                </div>
+                <span className="block text-xs text-[#697586] mt-0.5">{pkgSubtext}</span>
               </button>
             );
           })}
@@ -551,14 +739,14 @@ export function BookingForm({
         {duration === 'Others' && (
           <div className="mt-3">
             <label htmlFor="booking-custom-duration" className="block text-xs font-medium text-[#697586] mb-1">
-              Specify Custom Duration (Optional)
+              Specify Custom Duration / Trip Dates
             </label>
             <input
               id="booking-custom-duration"
               type="text"
               value={customDurationText}
               onChange={(e) => setCustomDurationText(e.target.value)}
-              placeholder="e.g., 3 Days, 10 Days, or Weekend trip"
+              placeholder="e.g., 3 days, 10 days, 2 months..."
               maxLength={80}
               className="w-full px-3.5 py-2.5 rounded-xl border border-[#E5EAF0] bg-white text-sm text-[#172337] focus:outline-none focus:border-[#F36B16]"
             />
@@ -566,95 +754,101 @@ export function BookingForm({
         )}
       </section>
 
-      {/* Step 5: Pickup & Return */}
+      {/* Step 5: Pickup and Return Schedule */}
       <section aria-labelledby="booking-step-5">
         <h3 id="booking-step-5" className="text-sm font-bold text-[#071D3A] uppercase tracking-wider mb-3">
           5. Pickup &amp; Return Schedule
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="space-y-3 p-3.5 rounded-xl bg-[#F5F7FA] border border-[#E5EAF0]">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#071D3A]">
-              <Calendar className="w-4 h-4 text-[#F36B16]" aria-hidden="true" />
-              <span>Pickup</span>
-            </div>
-            <div className="grid grid-cols-2 gap-2.5">
+          <div>
+            <span className="block text-xs font-semibold uppercase tracking-wider text-[#697586] mb-2">
+              Pickup
+            </span>
+            <div className="grid grid-cols-2 gap-2">
               <div>
-                <label htmlFor="booking-pickup-date" className="block text-xs font-medium text-[#697586] mb-1">
-                  Date
+                <label htmlFor="booking-pickup-date" className="sr-only">
+                  Pickup Date
                 </label>
-                <input
-                  id="booking-pickup-date"
-                  type="date"
-                  min={today}
-                  value={pickupDate}
-                  onChange={(e) => {
-                    const next = e.target.value;
-                    setPickupDate(next);
-                    if (returnDate < next) {
-                      setReturnDate(next);
-                    }
-                  }}
-                  required
-                  className="w-full px-2.5 py-2 rounded-lg border border-[#E5EAF0] bg-white text-[#172337] text-xs sm:text-sm focus:outline-none focus:border-[#F36B16]"
-                />
+                <div className="relative">
+                  <input
+                    id="booking-pickup-date"
+                    type="date"
+                    min={today}
+                    value={pickupDate}
+                    onChange={(e) => setPickupDate(e.target.value)}
+                    aria-invalid={Boolean(submittedErrors.pickup)}
+                    aria-describedby={submittedErrors.pickup ? 'err-pickup' : undefined}
+                    className="w-full px-3 py-2.5 rounded-xl border border-[#E5EAF0] bg-white text-xs sm:text-sm text-[#172337] focus:outline-none focus:border-[#F36B16]"
+                  />
+                  <Calendar className="w-4 h-4 text-slate-400 absolute right-3 top-3 pointer-events-none" />
+                </div>
               </div>
+
               <div>
-                <label htmlFor="booking-pickup-time" className="block text-xs font-medium text-[#697586] mb-1">
-                  Time
+                <label htmlFor="booking-pickup-time" className="sr-only">
+                  Pickup Time
                 </label>
-                <input
-                  id="booking-pickup-time"
-                  type="time"
-                  value={pickupTime}
-                  onChange={(e) => setPickupTime(e.target.value)}
-                  required
-                  className="w-full px-2.5 py-2 rounded-lg border border-[#E5EAF0] bg-white text-[#172337] text-xs sm:text-sm focus:outline-none focus:border-[#F36B16]"
-                />
+                <div className="relative">
+                  <input
+                    id="booking-pickup-time"
+                    type="time"
+                    value={pickupTime}
+                    onChange={(e) => setPickupTime(e.target.value)}
+                    className="w-full px-3 py-2.5 rounded-xl border border-[#E5EAF0] bg-white text-xs sm:text-sm text-[#172337] focus:outline-none focus:border-[#F36B16]"
+                  />
+                  <Clock className="w-4 h-4 text-slate-400 absolute right-3 top-3 pointer-events-none" />
+                </div>
               </div>
             </div>
             {submittedErrors.pickup && (
-              <p className="text-xs font-medium text-red-600" role="alert">
+              <p id="err-pickup" className="mt-1.5 text-xs font-medium text-red-600" role="alert">
                 {submittedErrors.pickup}
               </p>
             )}
           </div>
 
-          <div className="space-y-3 p-3.5 rounded-xl bg-[#F5F7FA] border border-[#E5EAF0]">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#071D3A]">
-              <Clock className="w-4 h-4 text-[#F36B16]" aria-hidden="true" />
-              <span>Return</span>
-            </div>
-            <div className="grid grid-cols-2 gap-2.5">
+          <div>
+            <span className="block text-xs font-semibold uppercase tracking-wider text-[#697586] mb-2">
+              Return
+            </span>
+            <div className="grid grid-cols-2 gap-2">
               <div>
-                <label htmlFor="booking-return-date" className="block text-xs font-medium text-[#697586] mb-1">
-                  Date
+                <label htmlFor="booking-return-date" className="sr-only">
+                  Return Date
                 </label>
-                <input
-                  id="booking-return-date"
-                  type="date"
-                  min={pickupDate || today}
-                  value={returnDate}
-                  onChange={(e) => setReturnDate(e.target.value)}
-                  required
-                  className="w-full px-2.5 py-2 rounded-lg border border-[#E5EAF0] bg-white text-[#172337] text-xs sm:text-sm focus:outline-none focus:border-[#F36B16]"
-                />
+                <div className="relative">
+                  <input
+                    id="booking-return-date"
+                    type="date"
+                    min={pickupDate || today}
+                    value={returnDate}
+                    onChange={(e) => setReturnDate(e.target.value)}
+                    aria-invalid={Boolean(submittedErrors.return)}
+                    aria-describedby={submittedErrors.return ? 'err-return' : undefined}
+                    className="w-full px-3 py-2.5 rounded-xl border border-[#E5EAF0] bg-white text-xs sm:text-sm text-[#172337] focus:outline-none focus:border-[#F36B16]"
+                  />
+                  <Calendar className="w-4 h-4 text-slate-400 absolute right-3 top-3 pointer-events-none" />
+                </div>
               </div>
+
               <div>
-                <label htmlFor="booking-return-time" className="block text-xs font-medium text-[#697586] mb-1">
-                  Time
+                <label htmlFor="booking-return-time" className="sr-only">
+                  Return Time
                 </label>
-                <input
-                  id="booking-return-time"
-                  type="time"
-                  value={returnTime}
-                  onChange={(e) => setReturnTime(e.target.value)}
-                  required
-                  className="w-full px-2.5 py-2 rounded-lg border border-[#E5EAF0] bg-white text-[#172337] text-xs sm:text-sm focus:outline-none focus:border-[#F36B16]"
-                />
+                <div className="relative">
+                  <input
+                    id="booking-return-time"
+                    type="time"
+                    value={returnTime}
+                    onChange={(e) => setReturnTime(e.target.value)}
+                    className="w-full px-3 py-2.5 rounded-xl border border-[#E5EAF0] bg-white text-xs sm:text-sm text-[#172337] focus:outline-none focus:border-[#F36B16]"
+                  />
+                  <Clock className="w-4 h-4 text-slate-400 absolute right-3 top-3 pointer-events-none" />
+                </div>
               </div>
             </div>
             {submittedErrors.return && (
-              <p className="text-xs font-medium text-red-600" role="alert">
+              <p id="err-return" className="mt-1.5 text-xs font-medium text-red-600" role="alert">
                 {submittedErrors.return}
               </p>
             )}
@@ -672,7 +866,7 @@ export function BookingForm({
           rows={3}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          placeholder="Optional: Add pickup area in Rourkela, trip details, or any special requests..."
+          placeholder="Optional: Add pickup area in Rourkela, trip purpose, or any special requests..."
           maxLength={350}
           className="w-full px-3.5 py-2.5 rounded-xl border border-[#E5EAF0] bg-white text-[#172337] text-sm focus:outline-none focus:border-[#F36B16] focus:ring-2 focus:ring-[#F36B16]/20"
         />
@@ -685,10 +879,17 @@ export function BookingForm({
       <section aria-labelledby="booking-summary-heading" className="rounded-2xl bg-[#071D3A] text-white p-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-white/15">
           <div>
-            <h3 id="booking-summary-heading" className="text-xs font-semibold uppercase tracking-wider text-slate-300">
-              Estimated Price
-            </h3>
-            <p className="mt-1 text-2xl font-bold text-[#F36B16] tabular-nums">
+            <div className="flex items-center gap-2">
+              <h3 id="booking-summary-heading" className="text-xs font-semibold uppercase tracking-wider text-slate-300">
+                Estimated Price
+              </h3>
+              {vehicleType === 'Car' && totalCarCount > 1 && (
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#F36B16]/20 text-[#F36B16] border border-[#F36B16]/40">
+                  {totalCarCount} Cars Total
+                </span>
+              )}
+            </div>
+            <p className="mt-1 text-2xl sm:text-3xl font-extrabold text-[#F36B16] tabular-nums">
               {priceEstimate.displayPrice}
             </p>
           </div>
@@ -696,6 +897,34 @@ export function BookingForm({
             Prices are negotiable
           </span>
         </div>
+
+        {/* Multi-Car Itemized Price Breakdown */}
+        {priceEstimate.breakdown.length > 1 && (
+          <div className="mt-3.5 pt-3 border-b border-white/15 pb-3">
+            <span className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+              Combined Vehicle Breakdown ({duration}):
+            </span>
+            <div className="space-y-1.5 bg-white/5 rounded-xl p-3 border border-white/10">
+              {priceEstimate.breakdown.map((item) => (
+                <div key={item.carId} className="flex items-center justify-between text-xs">
+                  <span className="text-slate-200">
+                    <span className="font-semibold text-white">{item.carName}</span>
+                    <span className="text-slate-400 ml-1.5">× {item.quantity}</span>
+                  </span>
+                  <span className="font-semibold text-white tabular-nums">
+                    {formatINR(item.total)}
+                  </span>
+                </div>
+              ))}
+              <div className="flex items-center justify-between text-xs font-bold pt-2 border-t border-white/10">
+                <span className="text-slate-300">Total Combined Estimate:</span>
+                <span className="text-[#F36B16] text-sm tabular-nums">
+                  {priceEstimate.displayPrice}
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
 
         <p className="mt-3 text-xs text-slate-300 leading-relaxed">
           {priceEstimate.helperText}
@@ -714,9 +943,9 @@ export function BookingForm({
               {mobile.trim() ? formatIndianMobileDisplay(mobile) : 'Not entered'}
             </dd>
           </div>
-          <div>
-            <dt className="text-slate-400">Vehicle</dt>
-            <dd className="font-semibold text-white truncate">
+          <div className="col-span-2 sm:col-span-1">
+            <dt className="text-slate-400">Vehicle(s)</dt>
+            <dd className="font-semibold text-white break-words">
               {resolvedVehicleModelLabel}
             </dd>
           </div>

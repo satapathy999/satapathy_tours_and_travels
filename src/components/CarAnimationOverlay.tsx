@@ -285,7 +285,7 @@ export function CarAnimationOverlay({ isVisible, onComplete }: CarAnimationOverl
               transition={{ duration: 0.35, delay: 0.18 }}
               className="mt-1 text-xs sm:text-sm font-semibold text-slate-300 tracking-[0.22em] uppercase"
             >
-              Swift Dzire • Baleno • Fronx • Swift
+              Scorpio • Baleno Auto • Amaze • Swift Dzire • Fronx
             </motion.p>
           </div>
 
