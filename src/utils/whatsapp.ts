@@ -160,7 +160,80 @@ export function buildContactEmailUrl(params: {
   );
 }
 
+export function buildTourPackageEnquiryMessage(
+  packageName: string,
+  travelers?: string,
+  tentativeDate?: string,
+  note?: string
+): string {
+  const lines = [
+    'Hello Satapathy Tour and Travels!',
+    '',
+    'I would like to enquire about an Odisha Tour Package from Rourkela.',
+    '',
+    `Tour Package: ${sanitizeInput(packageName, 100)}`,
+  ];
+  if (travelers) lines.push(`Number of Travelers: ${sanitizeInput(travelers, 20)}`);
+  if (tentativeDate) lines.push(`Tentative Travel Date: ${sanitizeInput(tentativeDate, 30)}`);
+  if (note) lines.push(`Notes / Preferences: ${sanitizeInput(note, 250)}`);
+  lines.push(
+    '',
+    'Please share package itinerary details, vehicle options (self-drive or with driver), and negotiable pricing.',
+    '',
+    'Thank you!'
+  );
+  return lines.join('\n');
+}
+
+export function buildTourPackageWhatsAppUrl(
+  packageName: string,
+  travelers?: string,
+  tentativeDate?: string,
+  note?: string
+): string {
+  return buildWhatsAppUrl(buildTourPackageEnquiryMessage(packageName, travelers, tentativeDate, note));
+}
+
+export function buildTaxiEnquiryMessage(
+  tripType: string,
+  pickup: string,
+  drop: string,
+  date?: string
+): string {
+  const lines = [
+    'Hello Satapathy Tour and Travels!',
+    '',
+    'I want to enquire about a Car Rental with Driver / Taxi Service in Rourkela.',
+    '',
+    `Trip Type: ${sanitizeInput(tripType, 50)}`,
+    `Pickup Location: ${sanitizeInput(pickup, 80)}`,
+    `Drop Location: ${sanitizeInput(drop, 80)}`,
+  ];
+  if (date) lines.push(`Travel Date: ${sanitizeInput(date, 30)}`);
+  lines.push(
+    '',
+    'Please confirm driver availability, vehicle choices, and fare estimate.',
+    '',
+    'Thank you!'
+  );
+  return lines.join('\n');
+}
+
+export function buildTaxiWhatsAppUrl(
+  tripType: string,
+  pickup: string,
+  drop: string,
+  date?: string
+): string {
+  return buildWhatsAppUrl(buildTaxiEnquiryMessage(tripType, pickup, drop, date));
+}
+
 export function triggerExternalWhatsApp(url: string): void {
+  // Defensive validation: ensure destination is strictly the verified WhatsApp endpoint
+  if (!url.startsWith('https://wa.me/')) {
+    console.error('Blocked navigation: invalid WhatsApp URL format.');
+    return;
+  }
   const anchor = document.createElement('a');
   anchor.href = url;
   anchor.target = '_blank';
@@ -171,6 +244,11 @@ export function triggerExternalWhatsApp(url: string): void {
 }
 
 export function triggerExternalEmail(url: string): void {
+  // Defensive validation: ensure destination is strictly a mailto URI
+  if (!url.startsWith('mailto:')) {
+    console.error('Blocked navigation: invalid mailto URL format.');
+    return;
+  }
   const anchor = document.createElement('a');
   anchor.href = url;
   document.body.appendChild(anchor);

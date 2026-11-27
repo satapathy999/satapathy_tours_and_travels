@@ -7,10 +7,11 @@ import { MobileMenu } from './MobileMenu';
 
 const NAV_ITEMS = [
   { label: 'Home', to: '/' },
-  { label: 'Cars', to: '/cars' },
-  { label: 'Bikes', to: '/bikes' },
-  { label: 'About Us', to: '/about' },
+  { label: 'Car Rental', to: '/car-rental-rourkela' },
+  { label: 'Bike Rental', to: '/bike-rental-rourkela' },
+  { label: 'Tour Packages', to: '/tour-packages' },
   { label: 'Pricing', to: '/pricing' },
+  { label: 'About Us', to: '/about' },
   { label: 'Contact', to: '/contact' },
 ];
 
@@ -58,7 +59,7 @@ export function Navbar() {
                   to={item.to}
                   end={item.to === '/'}
                   onClick={() => {
-                    if (item.to === '/cars') {
+                    if (item.to === '/car-rental-rourkela' || item.to === '/cars') {
                       triggerCarAnimation();
                     }
                   }}

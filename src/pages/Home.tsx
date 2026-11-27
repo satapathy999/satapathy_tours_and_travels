@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import {
   ArrowRight,
   BadgeIndianRupee,
+  Bike,
   Calendar,
   Car,
   Clock,
@@ -12,11 +13,14 @@ import {
   MapPin,
   MessageCircle,
   ShieldCheck,
+  Sparkles,
+  Users,
 } from 'lucide-react';
 import {
   BRAND_CONFIG,
   CAR_MODELS,
   RENTAL_DURATIONS,
+  SERVICE_AREAS_ROURKELA,
   type RentalDuration,
   type VehicleType,
 } from '../data/vehicles';
@@ -31,9 +35,10 @@ import { FAQSection } from '../components/FAQSection';
 
 export function Home() {
   usePageMeta({
-    title: 'Satapathy Tour and Travels – Self-Drive Car & Bike Rentals in Rourkela',
+    title: 'Satapathy Tour and Travel – Car Rental & Travel Agency in Rourkela',
     description:
-      'Explore more with convenient self-drive car rentals all over Rourkela from Satapathy Tour and Travels. Transparent negotiable packages for Scorpio, Baleno Automatic, Honda Amaze, Swift Dzire, Baleno, Fronx, and Swift.',
+      'Premier travel agency in Rourkela, Odisha. Affordable self-drive car rentals, car hire with driver, scooter rentals & custom Odisha tour packages. Call +91 78548 88381.',
+    canonical: '/',
   });
 
   const { openBooking, triggerCarAnimation } = useBooking();
@@ -77,41 +82,48 @@ export function Home() {
             <div className="flex items-center gap-3 mb-4">
               <span className="w-10 h-0.5 bg-[#F36B16] inline-block" aria-hidden="true" />
               <span className="text-xs sm:text-sm font-bold tracking-widest uppercase text-[#F36B16]">
-                SATAPATHY TOUR AND TRAVELS
+                SATAPATHY TOUR AND TRAVEL · ROURKELA, ODISHA
               </span>
             </div>
 
             <h1 className="text-3xl sm:text-5xl lg:text-[3.5rem] font-extrabold text-white tracking-tight leading-[1.1] text-balance">
-              Your Journey. Your Drive. Your Freedom.
+              Self-Drive Car Rental &amp; Travel Agency in Rourkela
             </h1>
 
             <p className="mt-5 text-base sm:text-lg text-slate-200 leading-relaxed max-w-xl">
-              Explore more with convenient self-drive car rentals all over Rourkela. Choose your vehicle, plan your journey, and experience the freedom of driving on your own terms.
+              Rent Scorpio, Baleno, Amaze, Dzire &amp; Fronx self-drive cars, hire chauffeur-driven outstation cabs, or book custom Odisha tour packages with transparent, negotiable pricing all over Rourkela.
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-3.5">
               <Link
-                to="/cars"
+                to="/car-rental-rourkela"
                 onClick={() => triggerCarAnimation()}
                 className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-[#F36B16] hover:bg-[#d95b0e] text-white font-semibold text-sm sm:text-base shadow-sm transition-colors whitespace-nowrap"
               >
-                <span>Explore Cars</span>
+                <span>Car Rental in Rourkela</span>
                 <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
               </Link>
 
               <Link
-                to="/bikes"
+                to="/tour-packages"
                 className="inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/25 text-white font-semibold text-sm sm:text-base transition-colors whitespace-nowrap"
               >
-                Explore Bikes
+                Tour Packages
+              </Link>
+
+              <Link
+                to="/bike-rental-rourkela"
+                className="inline-flex items-center justify-center px-5 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/25 text-white font-semibold text-sm sm:text-base transition-colors whitespace-nowrap"
+              >
+                Bike &amp; Scooter Rental
               </Link>
 
               <button
                 type="button"
                 onClick={() => openBooking()}
-                className="inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-white hover:bg-[#F5F7FA] text-[#071D3A] font-semibold text-sm sm:text-base transition-colors whitespace-nowrap cursor-pointer"
+                className="inline-flex items-center justify-center px-5 py-3.5 rounded-xl bg-white hover:bg-[#F5F7FA] text-[#071D3A] font-semibold text-sm sm:text-base transition-colors whitespace-nowrap cursor-pointer"
               >
-                Book Your Ride
+                Book Now
               </button>
             </div>
 
@@ -233,79 +245,155 @@ export function Home() {
         </form>
       </section>
 
-      {/* SECTION 3 — CHOOSE YOUR RIDE */}
-      <section className="py-16 sm:py-20 bg-white">
+      {/* SECTION 3 — CHOOSE YOUR SERVICE */}
+      <section className="py-16 sm:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading
-            eyebrow="Vehicle Categories"
-            title="Choose Your Perfect Ride"
-            description="Find the right vehicle for your next journey across Rourkela and beyond."
+            eyebrow="Our Core Services"
+            title="Comprehensive Travel &amp; Vehicle Rental Services in Rourkela"
+            description="From flexible self-drive car rentals and chauffeur-driven outstation cabs to two-wheeler hires and custom Odisha holiday tours."
           />
 
-          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-            {/* Cars Category Card */}
-            <article className="group bg-white rounded-2xl border border-[#E5EAF0] overflow-hidden flex flex-col justify-between transition-all duration-200 hover:shadow-lg">
+          <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* 1. Self-Drive Cars */}
+            <article className="group bg-white rounded-3xl border border-[#E5EAF0] overflow-hidden flex flex-col justify-between transition-all duration-200 hover:shadow-xl">
               <div>
                 <div className="aspect-16/10 bg-[#F5F7FA] overflow-hidden">
                   <ResilientImage
-                    src={CAR_MODELS[2].image}
-                    alt="Self-drive cars available at Satapathy Tour and Travels"
+                    src={CAR_MODELS[3].image}
+                    alt="Self-drive car rental in Rourkela - Mahindra Scorpio"
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
                   />
                 </div>
-                <div className="p-6 sm:p-8">
-                  <div className="flex items-center justify-between gap-3">
-                    <h3 className="text-2xl font-bold text-[#071D3A]">Self-Drive Cars</h3>
-                    <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-lg whitespace-nowrap">
-                      Available
+                <div className="p-6">
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <span className="text-xs font-bold uppercase tracking-wider text-[#F36B16]">
+                      Self-Drive
+                    </span>
+                    <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full">
+                      Available Now
                     </span>
                   </div>
-                  <p className="mt-3 text-base text-[#697586] leading-relaxed">
-                    Choose from our available cars and enjoy the freedom of travelling at your own pace.
+                  <h3 className="text-xl font-bold text-[#071D3A]">Self-Drive Car Rental</h3>
+                  <p className="mt-2 text-xs sm:text-sm text-[#697586] leading-relaxed">
+                    Scorpio 7-seater SUV, Baleno Automatic, Amaze, Dzire &amp; Fronx with transparent 12h &amp; 24h packages and negotiable pricing.
                   </p>
                 </div>
               </div>
-              <div className="px-6 sm:px-8 pb-6 sm:pb-8">
+              <div className="px-6 pb-6">
                 <Link
-                  to="/cars"
+                  to="/car-rental-rourkela"
                   onClick={() => triggerCarAnimation()}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#071D3A] hover:bg-[#0B2345] text-white font-semibold text-sm transition-colors"
+                  className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#071D3A] hover:bg-[#0B2345] text-white font-semibold text-xs transition-colors"
                 >
                   <span>Explore Cars</span>
-                  <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
             </article>
 
-            {/* Bikes Category Card */}
-            <article className="group bg-white rounded-2xl border border-[#E5EAF0] overflow-hidden flex flex-col justify-between transition-all duration-200 hover:shadow-lg">
+            {/* 2. With Driver / Outstation Taxi */}
+            <article className="group bg-white rounded-3xl border border-[#E5EAF0] overflow-hidden flex flex-col justify-between transition-all duration-200 hover:shadow-xl">
+              <div>
+                <div className="aspect-16/10 bg-[#071D3A] overflow-hidden flex items-center justify-center p-6 text-white text-center">
+                  <div>
+                    <Car className="w-12 h-12 text-[#F36B16] mx-auto mb-2" />
+                    <span className="text-xs font-bold text-slate-300">Outstation &amp; Local Cabs</span>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <span className="text-xs font-bold uppercase tracking-wider text-[#F36B16]">
+                      Chauffeur-Driven
+                    </span>
+                    <span className="text-[11px] font-bold text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-full">
+                      On-Demand
+                    </span>
+                  </div>
+                  <h3 className="text-xl font-bold text-[#071D3A]">Car Rental With Driver</h3>
+                  <p className="mt-2 text-xs sm:text-sm text-[#697586] leading-relaxed">
+                    Local Rourkela taxi service and outstation cabs to Jharsuguda Airport, Sambalpur, Bhubaneswar, Ranchi &amp; Puri with experienced drivers.
+                  </p>
+                </div>
+              </div>
+              <div className="px-6 pb-6">
+                <Link
+                  to="/car-rental-rourkela"
+                  className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-xl border border-[#E5EAF0] hover:bg-[#F5F7FA] text-[#071D3A] font-semibold text-xs transition-colors"
+                >
+                  <span>Outstation Cabs</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </article>
+
+            {/* 3. Bike & Scooter Rentals */}
+            <article className="group bg-white rounded-3xl border border-[#E5EAF0] overflow-hidden flex flex-col justify-between transition-all duration-200 hover:shadow-xl">
               <div>
                 <div className="aspect-16/10 bg-[#071D3A] overflow-hidden">
                   <ResilientImage
                     src={BRAND_CONFIG.bikeHeroImage}
-                    alt="Upcoming self-drive motorcycle rentals"
+                    alt="Bike and scooter rental in Rourkela"
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
                   />
                 </div>
-                <div className="p-6 sm:p-8">
-                  <div className="flex items-center justify-between gap-3">
-                    <h3 className="text-2xl font-bold text-[#071D3A]">Self-Drive Bikes</h3>
-                    <span className="text-xs font-semibold text-[#F36B16] bg-[#FFF3E9] px-3 py-1 rounded-lg whitespace-nowrap">
-                      Coming Soon
+                <div className="p-6">
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <span className="text-xs font-bold uppercase tracking-wider text-[#F36B16]">
+                      Two-Wheelers
+                    </span>
+                    <span className="text-[11px] font-bold text-[#F36B16] bg-[#FFF3E9] px-2.5 py-0.5 rounded-full">
+                      Enquiries Open
                     </span>
                   </div>
-                  <p className="mt-3 text-base text-[#697586] leading-relaxed">
-                    Two-wheel adventures are coming soon.
+                  <h3 className="text-xl font-bold text-[#071D3A]">Bike &amp; Scooter Rental</h3>
+                  <p className="mt-2 text-xs sm:text-sm text-[#697586] leading-relaxed">
+                    Rent Honda Activa &amp; TVS Jupiter gearless scooters for city travel or motorcycles for weekend adventures with helmets included.
                   </p>
                 </div>
               </div>
-              <div className="px-6 sm:px-8 pb-6 sm:pb-8">
+              <div className="px-6 pb-6">
                 <Link
-                  to="/bikes"
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-[#E5EAF0] hover:bg-[#F5F7FA] text-[#071D3A] font-semibold text-sm transition-colors"
+                  to="/bike-rental-rourkela"
+                  className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-xl border border-[#E5EAF0] hover:bg-[#F5F7FA] text-[#071D3A] font-semibold text-xs transition-colors"
                 >
                   <span>Explore Bikes</span>
-                  <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </article>
+
+            {/* 4. Odisha Tour Packages */}
+            <article className="group bg-white rounded-3xl border border-[#E5EAF0] overflow-hidden flex flex-col justify-between transition-all duration-200 hover:shadow-xl">
+              <div>
+                <div className="aspect-16/10 bg-[#071D3A] overflow-hidden flex items-center justify-center p-6 text-white text-center">
+                  <div>
+                    <Compass className="w-12 h-12 text-[#F36B16] mx-auto mb-2" />
+                    <span className="text-xs font-bold text-slate-300">Odisha Tourism</span>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <span className="text-xs font-bold uppercase tracking-wider text-[#F36B16]">
+                      Holiday Tours
+                    </span>
+                    <span className="text-[11px] font-bold text-purple-700 bg-purple-50 px-2.5 py-0.5 rounded-full">
+                      Customized
+                    </span>
+                  </div>
+                  <h3 className="text-xl font-bold text-[#071D3A]">Odisha Tour Packages</h3>
+                  <p className="mt-2 text-xs sm:text-sm text-[#697586] leading-relaxed">
+                    Custom tours from Rourkela to Khandadhar Waterfalls, Mandira Dam, Debrigarh Sanctuary, Similipal, and Puri Jagannath Dham.
+                  </p>
+                </div>
+              </div>
+              <div className="px-6 pb-6">
+                <Link
+                  to="/tour-packages"
+                  className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#F36B16] hover:bg-[#d95b0e] text-white font-semibold text-xs transition-colors shadow-xs"
+                >
+                  <span>View Tour Packages</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
             </article>
@@ -319,11 +407,11 @@ export function Home() {
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <SectionHeading
               eyebrow="Available Fleet"
-              title="Our Available Cars"
+              title="Our Available Cars in Rourkela"
               description="All listed prices are negotiable. Contact us directly for your best rental package."
             />
             <Link
-              to="/cars"
+              to="/car-rental-rourkela"
               onClick={() => triggerCarAnimation()}
               className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#F36B16] hover:text-[#d95b0e] whitespace-nowrap shrink-0"
             >

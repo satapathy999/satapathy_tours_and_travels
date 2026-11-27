@@ -1,32 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://satapathytourandtravels.com/</loc>
-    <changefreq>weekly</changefreq>
+    <loc>https://www.satapathytravels.com/</loc>
+    <lastmod>2026-11-27</lastmod>
+    <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://satapathytourandtravels.com/cars</loc>
+    <loc>https://www.satapathytravels.com/car-rental-rourkela</loc>
+    <lastmod>2026-11-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://satapathytourandtravels.com/bikes</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://satapathytourandtravels.com/pricing</loc>
+    <loc>https://www.satapathytravels.com/bike-rental-rourkela</loc>
+    <lastmod>2026-11-27</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://satapathytourandtravels.com/about</loc>
+    <loc>https://www.satapathytravels.com/tour-packages</loc>
+    <lastmod>2026-11-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://www.satapathytravels.com/pricing</loc>
+    <lastmod>2026-11-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.satapathytravels.com/about</loc>
+    <lastmod>2026-11-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://satapathytourandtravels.com/contact</loc>
+    <loc>https://www.satapathytravels.com/contact</loc>
+    <lastmod>2026-11-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>

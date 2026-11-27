@@ -81,17 +81,22 @@ export function Footer() {
           {/* Column 3: Rentals */}
           <div>
             <h4 className="text-sm font-semibold uppercase tracking-wider text-slate-300 mb-4">
-              Rentals
+              Rentals &amp; Tours
             </h4>
             <ul className="space-y-2.5 text-sm">
               <li>
-                <Link to="/cars" className="text-slate-200 hover:text-[#F36B16] transition-colors">
-                  Self-Drive Cars
+                <Link to="/car-rental-rourkela" className="text-slate-200 hover:text-[#F36B16] transition-colors">
+                  Car Rental in Rourkela
                 </Link>
               </li>
               <li>
-                <Link to="/bikes" className="text-slate-200 hover:text-[#F36B16] transition-colors">
-                  Self-Drive Bikes (Coming Soon)
+                <Link to="/bike-rental-rourkela" className="text-slate-200 hover:text-[#F36B16] transition-colors">
+                  Bike &amp; Scooter Rental
+                </Link>
+              </li>
+              <li>
+                <Link to="/tour-packages" className="text-slate-200 hover:text-[#F36B16] transition-colors">
+                  Odisha Tour Packages
                 </Link>
               </li>
               <li>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Bike, Car, CheckCircle2, Clock, MessageCircle, Quote, Sparkles, ShieldCheck } from 'lucide-react';
+import { ArrowRight, Bike, Car, CheckCircle2, Clock, Compass, MessageCircle, Quote, Sparkles, ShieldCheck } from 'lucide-react';
 import { BRAND_CONFIG } from '../data/vehicles';
 import { usePageMeta } from '../utils/seo';
 import { useBooking } from '../context/BookingContext';
@@ -9,9 +9,11 @@ import { ResilientImage } from '../components/ResilientImage';
 
 export function About() {
   usePageMeta({
-    title: 'About Us – Satapathy Tour and Travels',
+    title: 'About Us | Satapathy Tour and Travels Rourkela',
     description:
-      'Learn about Satapathy Tour and Travels — convenient self-drive car rental enquiries with transparent, negotiable pricing and direct WhatsApp booking.',
+      'Learn about Satapathy Tour and Travels in Rourkela, founded by Ayush Satapathy. Your trusted local partner for self-drive cars, bikes, chauffeur taxis, and Odisha tours.',
+    canonical: '/about',
+    ogType: 'website',
   });
 
   const { openBooking } = useBooking();
@@ -242,7 +244,7 @@ export function About() {
             title="Self-Drive Rental Services"
           />
 
-          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-white rounded-2xl border border-[#E5EAF0] p-6 sm:p-8 flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between gap-3 mb-4">
@@ -253,14 +255,14 @@ export function About() {
                     Available
                   </span>
                 </div>
-                <h3 className="text-2xl font-bold text-[#071D3A]">Self-Drive Cars</h3>
+                <h3 className="text-2xl font-bold text-[#071D3A]">Car Rental in Rourkela</h3>
                 <p className="mt-3 text-sm sm:text-base text-[#697586] leading-relaxed">
-                  Choose from Scorpio, Baleno Automatic, Honda Amaze, Swift Dzire, Baleno, Fronx, and Swift with 12-hour and 24-hour package options and negotiable rates.
+                  Choose from Scorpio, Baleno Automatic, Honda Amaze, Swift Dzire, Fronx, and Swift with self-drive or driver-assisted options across Rourkela.
                 </p>
               </div>
               <div className="mt-6">
                 <Link
-                  to="/cars"
+                  to="/car-rental-rourkela"
                   className="inline-flex items-center gap-2 text-sm font-semibold text-[#F36B16] hover:text-[#d95b0e]"
                 >
                   <span>Browse Cars</span>
@@ -276,20 +278,46 @@ export function About() {
                     <Bike className="w-6 h-6" aria-hidden="true" />
                   </div>
                   <span className="text-xs font-semibold text-[#F36B16] bg-[#FFF3E9] px-3 py-1 rounded-lg">
-                    Coming Soon
+                    Enquiries Open
                   </span>
                 </div>
-                <h3 className="text-2xl font-bold text-[#071D3A]">Self-Drive Bikes</h3>
+                <h3 className="text-2xl font-bold text-[#071D3A]">Bike &amp; Scooter Rental</h3>
                 <p className="mt-3 text-sm sm:text-base text-[#697586] leading-relaxed">
-                  Our self-drive bike rental service is currently in preparation and has not launched yet. You can reach out via WhatsApp to share your interest.
+                  Upcoming two-wheeler rentals in Rourkela including Activa, Jupiter, Pulsar, and Royal Enfield. Inquire early on WhatsApp.
                 </p>
               </div>
               <div className="mt-6">
                 <Link
-                  to="/bikes"
+                  to="/bike-rental-rourkela"
                   className="inline-flex items-center gap-2 text-sm font-semibold text-[#071D3A] hover:text-[#F36B16]"
                 >
                   <span>View Bike Updates</span>
+                  <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                </Link>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-2xl border border-[#E5EAF0] p-6 sm:p-8 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between gap-3 mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-[#071D3A]/5 text-[#071D3A] flex items-center justify-center">
+                    <Compass className="w-6 h-6 text-[#F36B16]" aria-hidden="true" />
+                  </div>
+                  <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-lg">
+                    Custom Tours
+                  </span>
+                </div>
+                <h3 className="text-2xl font-bold text-[#071D3A]">Odisha Tour Packages</h3>
+                <p className="mt-3 text-sm sm:text-base text-[#697586] leading-relaxed">
+                  Tailored outstation travel packages from Rourkela to Khandadhar, Mandira Dam, Debrigarh Sanctuary, Similipal, and Puri Jagannath.
+                </p>
+              </div>
+              <div className="mt-6">
+                <Link
+                  to="/tour-packages"
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-[#071D3A] hover:text-[#F36B16]"
+                >
+                  <span>Explore Tour Packages</span>
                   <ArrowRight className="w-4 h-4" aria-hidden="true" />
                 </Link>
               </div>

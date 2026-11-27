@@ -9,9 +9,11 @@ import { useBooking } from '../context/BookingContext';
 
 export function Pricing() {
   usePageMeta({
-    title: 'Rental Pricing – Satapathy Tour and Travels',
+    title: 'Rental Pricing & Rates | Satapathy Tour and Travels Rourkela',
     description:
-      'View 12-hour and 24-hour self-drive car rental packages for Scorpio, Baleno Automatic, Honda Amaze, Swift Dzire, Baleno, Fronx, and Swift. All prices are negotiable.',
+      'Transparent 12-hour and 24-hour self-drive car rental rates in Rourkela for Scorpio, Fronx, Swift, Baleno & Dzire. Negotiable rates and zero hidden charges.',
+    canonical: '/pricing',
+    ogType: 'website',
   });
 
   const { openBooking } = useBooking();

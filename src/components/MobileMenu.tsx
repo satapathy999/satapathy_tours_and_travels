@@ -79,7 +79,7 @@ export function MobileMenu({ isOpen, onClose, navItems }: MobileMenuProps) {
                 to={item.to}
                 end={item.to === '/'}
                 onClick={() => {
-                  if (item.to === '/cars') {
+                  if (item.to === '/car-rental-rourkela' || item.to === '/cars') {
                     triggerCarAnimation();
                   }
                   onClose();

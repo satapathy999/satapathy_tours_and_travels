@@ -6,9 +6,11 @@ import { ContactForm } from '../components/ContactForm';
 
 export function Contact() {
   usePageMeta({
-    title: 'Contact Us – Satapathy Tour and Travels (Rourkela)',
+    title: 'Contact Us | Satapathy Tour and Travels Rourkela | Phone & WhatsApp',
     description:
-      'Get in touch with Satapathy Tour and Travels all over Rourkela via phone, WhatsApp, email (rklselfdrivecarz@gmail.com), or Instagram.',
+      'Contact Satapathy Tour and Travels in Rourkela. Call +91 78548 88381 or chat on WhatsApp for self-drive car rentals, bike bookings, outstation taxis, and tour packages.',
+    canonical: '/contact',
+    ogType: 'website',
   });
 
   return (
