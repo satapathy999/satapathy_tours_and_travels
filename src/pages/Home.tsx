@@ -250,11 +250,11 @@ export function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading
             eyebrow="Our Core Services"
-            title="Comprehensive Travel &amp; Vehicle Rental Services in Rourkela"
-            description="From flexible self-drive car rentals and chauffeur-driven outstation cabs to two-wheeler hires and custom Odisha holiday tours."
+            title="Self-Drive Car &amp; Bike Rental Services in Rourkela"
+            description="Flexible self-drive car rentals and upcoming two-wheeler hires with transparent, negotiable pricing all over Rourkela."
           />
 
-          <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-3xl mx-auto">
             {/* 1. Self-Drive Cars */}
             <article className="group bg-white rounded-3xl border border-[#E5EAF0] overflow-hidden flex flex-col justify-between transition-all duration-200 hover:shadow-xl">
               <div>
@@ -292,42 +292,7 @@ export function Home() {
               </div>
             </article>
 
-            {/* 2. With Driver / Outstation Taxi */}
-            <article className="group bg-white rounded-3xl border border-[#E5EAF0] overflow-hidden flex flex-col justify-between transition-all duration-200 hover:shadow-xl">
-              <div>
-                <div className="aspect-16/10 bg-[#071D3A] overflow-hidden flex items-center justify-center p-6 text-white text-center">
-                  <div>
-                    <Car className="w-12 h-12 text-[#F36B16] mx-auto mb-2" />
-                    <span className="text-xs font-bold text-slate-300">Outstation &amp; Local Cabs</span>
-                  </div>
-                </div>
-                <div className="p-6">
-                  <div className="flex items-center justify-between gap-2 mb-2">
-                    <span className="text-xs font-bold uppercase tracking-wider text-[#F36B16]">
-                      Chauffeur-Driven
-                    </span>
-                    <span className="text-[11px] font-bold text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-full">
-                      On-Demand
-                    </span>
-                  </div>
-                  <h3 className="text-xl font-bold text-[#071D3A]">Car Rental With Driver</h3>
-                  <p className="mt-2 text-xs sm:text-sm text-[#697586] leading-relaxed">
-                    Local Rourkela taxi service and outstation cabs to Jharsuguda Airport, Sambalpur, Bhubaneswar, Ranchi &amp; Puri with experienced drivers.
-                  </p>
-                </div>
-              </div>
-              <div className="px-6 pb-6">
-                <Link
-                  to="/car-rental-rourkela"
-                  className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-xl border border-[#E5EAF0] hover:bg-[#F5F7FA] text-[#071D3A] font-semibold text-xs transition-colors"
-                >
-                  <span>Outstation Cabs</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
-              </div>
-            </article>
-
-            {/* 3. Bike & Scooter Rentals */}
+            {/* 2. Bike & Scooter Rentals */}
             <article className="group bg-white rounded-3xl border border-[#E5EAF0] overflow-hidden flex flex-col justify-between transition-all duration-200 hover:shadow-xl">
               <div>
                 <div className="aspect-16/10 bg-[#071D3A] overflow-hidden">
@@ -363,40 +328,6 @@ export function Home() {
               </div>
             </article>
 
-            {/* 4. Odisha Tour Packages */}
-            <article className="group bg-white rounded-3xl border border-[#E5EAF0] overflow-hidden flex flex-col justify-between transition-all duration-200 hover:shadow-xl">
-              <div>
-                <div className="aspect-16/10 bg-[#071D3A] overflow-hidden flex items-center justify-center p-6 text-white text-center">
-                  <div>
-                    <Compass className="w-12 h-12 text-[#F36B16] mx-auto mb-2" />
-                    <span className="text-xs font-bold text-slate-300">Odisha Tourism</span>
-                  </div>
-                </div>
-                <div className="p-6">
-                  <div className="flex items-center justify-between gap-2 mb-2">
-                    <span className="text-xs font-bold uppercase tracking-wider text-[#F36B16]">
-                      Holiday Tours
-                    </span>
-                    <span className="text-[11px] font-bold text-purple-700 bg-purple-50 px-2.5 py-0.5 rounded-full">
-                      Customized
-                    </span>
-                  </div>
-                  <h3 className="text-xl font-bold text-[#071D3A]">Odisha Tour Packages</h3>
-                  <p className="mt-2 text-xs sm:text-sm text-[#697586] leading-relaxed">
-                    Custom tours from Rourkela to Khandadhar Waterfalls, Mandira Dam, Debrigarh Sanctuary, Similipal, and Puri Jagannath Dham.
-                  </p>
-                </div>
-              </div>
-              <div className="px-6 pb-6">
-                <Link
-                  to="/tour-packages"
-                  className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#F36B16] hover:bg-[#d95b0e] text-white font-semibold text-xs transition-colors shadow-xs"
-                >
-                  <span>View Tour Packages</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
-              </div>
-            </article>
           </div>
         </div>
       </section>
