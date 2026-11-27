@@ -43,4 +43,4 @@ npm run build
 git push -u origin main
 ```
 
-Repository: `https://github.com/rudra790/satapathy-tout-and-travels.git`
+Repository: `https://github.com/satapathy999/satapathy_tours_and_travels.git`
